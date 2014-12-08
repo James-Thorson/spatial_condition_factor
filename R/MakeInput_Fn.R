@@ -1,5 +1,8 @@
 MakeInput_Fn <-
-function( n_x, Version, MeshList, Data_Geostat, FieldConfig, ObsConfig, ObsModel, Aniso, NN, X_a_xjt, X_b_xjt ){
+function( n_x, Version, loc_x, Data_Geostat, FieldConfig, ObsConfig, ObsModel, Aniso, NN, X_a_xjt, X_b_xjt ){
+
+  # Create the SPDE/GMRF model, (kappa^2-Delta)(tau x) = W:
+  MeshList = Calc_Anisotropic_Mesh(loc_x=loc_x)
 
   if(Version%in%c("growth_v1a","growth_v1b","growth_v1c","growth_v2a","growth_v2a_fix","growth_v2a_bridge","growth_v2b","growth_v2c","growth_v2d","growth_v2e")){
     # Data
