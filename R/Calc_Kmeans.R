@@ -3,7 +3,7 @@ function(n_x, Kmeans_Config, Data_Geostat, Data_Extrap){
   old.options <- options()
   options( "warn" = -1 ) 
   on.exit( options(old.options) )   
-  if( paste0("Kmeans-",n_x,".RData") %in% list.files(getwd()) ){
+  if( paste0("Kmeans.RData") %in% list.files(getwd()) ){
     load( file=paste(DateFile,"Kmeans.RData",sep=""))
   }else{
     Kmeans = list( "tot.withinss"=Inf )
