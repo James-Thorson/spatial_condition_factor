@@ -21,9 +21,6 @@ function( n_x, Version, loc_x, Data_Geostat, FieldConfig, ObsConfig, ObsModel, A
   Tri_Area = rep(NA, nrow(E0))
   for(i in 1:length(Tri_Area)) Tri_Area[i] = TmpFn( E0[i,],E1[i,] )/2   # T = area of each triangle
 
-  # Create the SPDE/GMRF model, (kappa^2-Delta)(tau x) = W:
-  #MeshList = Calc_Anisotropic_Mesh(loc_x=loc_x)
-
   if(Version%in%c("growth_v1a","growth_v1b","growth_v1c","growth_v2a","growth_v2a_fix","growth_v2a_bridge","growth_v2b","growth_v2c","growth_v2d","growth_v2e")){
     # Data
     if( Version %in% c("growth_v1a") ) TmbData = list("n_i"=nrow(Data_Geostat), "n_s"=MeshList$spde$n.spde, "n_j"=n_x, , "n_t"=diff(range(unique(Data_Geostat[,'Year'])))+1, "Aniso"=Aniso, "ObsModel"=ObsModel, "w_i"=Data_Geostat[,'WEIGHT_KG'], "l_i"=Data_Geostat[,'LENGTH_CM'], "J_i"=NN$nn.idx[,1]-1, "T_i"=Data_Geostat[,'Year']-min(Data_Geostat[,'Year']), "n_tri"=nrow(MeshList$mesh$graph$tv), "Tri_Area"=MeshList$Tri_Area, "E0"=MeshList$E0, "E1"=MeshList$E1, "E2"=MeshList$E2, "TV"=MeshList$TV-1, "G0_inv"=as(diag(1/diag(MeshList$spde$param.inla$M0)),"dgTMatrix"), "G0"=MeshList$spde$param.inla$M0, "G1"=MeshList$spde$param.inla$M1, "G2"=MeshList$spde$param.inla$M2)
