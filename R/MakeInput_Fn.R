@@ -1,8 +1,28 @@
 MakeInput_Fn <-
 function( n_x, Version, loc_x, Data_Geostat, FieldConfig, ObsConfig, ObsModel, Aniso, NN, X_a_xjt, X_b_xjt ){
 
+  # Create the SPDE mesh
+  mesh = inla.mesh.create( loc_x, plot.delay=NULL, refine=FALSE)
+  spde = inla.spde2.matern(mesh, alpha=2)
+
+  # Pre-processing in R for anisotropy
+  Dset = 1:2
+  # Triangle info
+  TV = mesh$graph$tv       # Triangle to vertex indexing
+  V0 = mesh$loc[TV[,1],Dset]   # V = vertices for each triangle
+  V1 = mesh$loc[TV[,2],Dset]
+  V2 = mesh$loc[TV[,3],Dset]
+  E0 = V2 - V1                      # E = edge for each triangle
+  E1 = V0 - V2
+  E2 = V1 - V0
+
+  # Calculate Areas
+  TmpFn = function(Vec1,Vec2) abs(det( rbind(Vec1,Vec2) ))
+  Tri_Area = rep(NA, nrow(E0))
+  for(i in 1:length(Tri_Area)) Tri_Area[i] = TmpFn( E0[i,],E1[i,] )/2   # T = area of each triangle
+
   # Create the SPDE/GMRF model, (kappa^2-Delta)(tau x) = W:
-  MeshList = Calc_Anisotropic_Mesh(loc_x=loc_x)
+  #MeshList = Calc_Anisotropic_Mesh(loc_x=loc_x)
 
   if(Version%in%c("growth_v1a","growth_v1b","growth_v1c","growth_v2a","growth_v2a_fix","growth_v2a_bridge","growth_v2b","growth_v2c","growth_v2d","growth_v2e")){
     # Data
